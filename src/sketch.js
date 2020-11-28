@@ -1,115 +1,59 @@
-//-----------------Globals
-let tileSize = 96;
-let pixelColor;
-let sourceImage;
-let particle;
-let showImage = false;
-
-//-----------------Setup
+// globals
+var tileWidth = 500;
+var tileHeight = 500;
+// setup
 function preload() {
-  sourceImage=loadImage("img/earth.jpg");
+  sourceImage = loadImage("img/mandelbrot.png");
 }
 
 function setup() {
-  //createCanvas(1024,683);
-  let canvas = createCanvas(550,368);
+  let canvas = createCanvas(sourceImage.width, sourceImage.height);
   canvas.parent('canvasContainer');
-  background(0);
+
+  background(255);
   smooth();
-  particle = new Particle();
 };
 
-//-----------------Main Loop
+// main loop
 function draw() {
-  particle.update();
-  tileCursor(particle);
-  if (showImage) {
-    image(sourceImage,0,0);
-  }
+  var tile = new Tile(sourceImage, tileWidth, tileHeight);
+  var grid = new Grid(5, 5);
+  grid.update(tile);
 };
 
-//-----------------Defined Functions
-function makeTile(outputImage) {
-  for (let i=0; i<=outputImage.width/2; i++) {
-    for (let j=0; j<=outputImage.height/2; j++) {
-      pixelColor = outputImage.get(i,j);
-      outputImage.set(i,j,pixelColor);
-      outputImage.set(outputImage.width-i,j,pixelColor);
-      outputImage.set(i,outputImage.height-j,pixelColor);
-      outputImage.set(outputImage.width-i,outputImage.height-j,pixelColor);
-    }
+// object representation of grid
+class Grid {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
   }
-  return outputImage;
-};
 
-function tileCursor(particle) {
-  let tile = makeTile(sourceImage.get(particle.position.x,particle.position.y,tileSize,tileSize));
-  for (let i = 0; i < width; i += tileSize) {
-    for (let j = 0; j < height; j += tileSize) {
-      image(tile,i,j);
-    }
-  }
-};
-
-//-----------------Interactions
-function keyPressed() {
-  if (key == ' ') {
-    showImage = !showImage;
-  }
-  if (key == CODED) {
-    if (keyCode == UP) {
-      tileSize += 8;
-      for (let i=0; i<width; i+=tileSize) {
-        for (let j=0; j<height; j+=tileSize) {
-          image(makeTile(sourceImage.get(particle.position.x,particle.position.y,tileSize,tileSize)),i,j);
-        }
-      }
-    }
-    if (keyCode == DOWN) {
-      tileSize -= 8;
-      for (let i=0; i<width; i+=tileSize) {
-        for (let j=0; j<height; j+=tileSize) {
-          image(makeTile(sourceImage.get((particle.position.x,    particle.position.y,tileSize,tileSize)),i,j));
-        }
-      }
-    }
+  update(tile) {
+    // for (let i = 0; i < this.width; i++) {
+    //   for (let j = 0; j < this.height; j++) {
+    //     if (i % 2 !== 0 && j % 2 !== 0) {
+    //       // 180 degree rotate lower right corner
+    //     } else if (i % 2 === 0 && j % 2 !== 0) {
+    //       // 270 degree rotate lower left corner
+    //     } else if (i % 2 !== 0 && j % 2 === 0) {
+    //       // 90 degree rotate upper right corner
+    //     } else if (i % 2 === 0 && j % 2 === 0) {
+    //       // 0 or 360 degree rotate upper left corner
+    //       image(tile.image, i * tile.image.width, j * tile.image.height);
+    //     }
+    //   }
+    // }
+    image(tile.image, 0, 0, tile.width/2, tile.height); //video on canvas, position, dimensions
+    translate(tile.width,0); // move to far corner
+    scale(-1.0,1.0);    // flip x-axis backwards
+    image(tile.image, 0, 0, tile.width/2, tile.height); //video on canvas, position, dimensions
   }
 }
 
-//-----------------Defined Classes
-class Particle {
-
-  constructor() {
-    this.position = new p5.Vector(random(width),random(height),0);
-    this.velocity = new p5.Vector(0,0,0);
-    this.particleColor = color(255);
-  }
-
-  update() {
-    velocity.x = 0.25*cos(TWO_PI*noise(0.001*position.x,0.001*position.y,0.001*position.z));
-    velocity.y = 0.25*sin(TWO_PI*noise(0.001*position.x,0.001*position.y,0.001*position.z));
-    position.add(velocity);
-
-    //deal with edge cases
-    if (position.x<0) {
-       position.x+=width;
-    }
-
-    if (position.x>width) {
-       position.x-=width;
-    }
-
-    if (position.y<0) {
-       position.y+=height;
-    }
-
-    if (position.y>height) {
-       position.y-=height;
-    }
-  }
-
-  render() {
-    stroke(particleColor,16);
-    line(position.x,position.y,position.x+velocity.x,position.y+velocity.y);
+class Tile {
+  constructor(image, width, height) {
+    this.width = width;
+    this.height = height;
+    this.image = image.get(mouseX, mouseY, this.width, this.height);
   }
 }

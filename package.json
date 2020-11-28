@@ -1,0 +1,10 @@
+{
+  "name": "kaleidovision",
+  "version": "1.0.0",
+  "description": "kaleidovision",
+  "scripts": {
+    "start": "npx live-server"
+  },
+  "author": "Edward Zhao",
+  "license": "UNLICENSED"
+}

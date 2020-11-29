@@ -118,9 +118,8 @@ class Tile {
   constructor(image, width, height) {
     this.width = width;
     this.height = height;
-    this.image = image.get(mouseX, mouseY, this.width, this.height);
     if (isMobileBrowser) {
-      this.image = image.get(200, 200, this.width, this.height);
+      this.image = image.get(touches[0].x, touches[0].y, this.width, this.height);
     } else {
       this.image = image.get(mouseX, mouseY, this.width, this.height);
     }

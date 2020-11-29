@@ -7,7 +7,10 @@ var backgroundOption = 0;
 
 // setup
 function preload() {
-  sourceImage = loadImage("img/mandelbrot.png");
+  sourceImage = sourceImage0 = loadImage("img/mandelbrot.png");
+  sourceImage1 = loadImage("img/mandelbrot2.jpg");
+  sourceImage2 = loadImage("img/buildingsketch.jpg");
+  //souceImage = sourceImage0;
 }
 
 function setup() {
@@ -46,11 +49,11 @@ function backgroundCycler() {
     backgroundOption++;
   }
   if (backgroundOption === 0) {
-    sourceImage = loadImage("img/mandelbrot.png");
+    sourceImage = sourceImage0;
   } else if (backgroundOption === 1) {
-    sourceImage = loadImage("img/mandelbrot2.jpg");
+    sourceImage = sourceImage1;
   } else if (backgroundOption === 2) {
-    sourceImage = loadImage("img/buildingsketch.jpg");
+    sourceImage = sourceImage2;
   }
 }
 

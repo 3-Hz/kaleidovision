@@ -1,12 +1,17 @@
 // globals
-var tileWidth = 500;
-var tileHeight = 500;
+var tileSize = 100;
+var tileWidth = tileSize;
+var tileHeight = tileSize;
+var gridSize = 0;
+var backgroundOption = 0;
+
 // setup
 function preload() {
   sourceImage = loadImage("img/mandelbrot.png");
 }
 
 function setup() {
+  resizeGrid();
   let canvas = createCanvas(sourceImage.width, sourceImage.height);
   canvas.parent('canvasContainer');
 
@@ -17,9 +22,45 @@ function setup() {
 // main loop
 function draw() {
   var tile = new Tile(sourceImage, tileWidth, tileHeight);
-  var grid = new Grid(2, 2);
+  var grid = new Grid(gridSize, gridSize);
   grid.update(tile);
 };
+
+// event listeners
+function mouseClicked() {
+  backgroundCycler();
+  resizeGrid();
+}
+
+function keyPressed() {
+  if (keyCode === LEFT_ARROW && tileSize > 0) {
+    tileSize -= 50;
+  }
+}
+
+// helper functions
+function backgroundCycler() {
+  if (backgroundOption === 2) {
+    backgroundOption = 0;
+  } else {
+    backgroundOption++;
+  }
+  if (backgroundOption === 0) {
+    sourceImage = loadImage("img/mandelbrot.png");
+  } else if (backgroundOption === 1) {
+    sourceImage = loadImage("img/mandelbrot2.jpg");
+  } else if (backgroundOption === 2) {
+    sourceImage = loadImage("img/buildingsketch.jpg");
+  }
+}
+
+function resizeGrid() {
+  gridsize = 0;
+  while ((gridSize * tileWidth) < (sourceImage.width + tileWidth)) {
+    gridSize++;
+  }
+  gridSize = (gridSize - (gridSize % 2));
+}
 
 // object representation of grid
 class Grid {
@@ -29,32 +70,27 @@ class Grid {
   }
 
   update(tile) {
-    for (let i = 0; i < this.width; i++) {
-      for (let j = 0; j < this.height; j++) {
-        // if (i % 2 !== 0 && j % 2 !== 0) {
-        //   // 180 degree rotate lower right corner
-        // } else if (i % 2 === 0 && j % 2 !== 0) {
-        //   // 270 degree rotate lower left corner
-        // } else if (i % 2 !== 0 && j % 2 === 0) {
-        //   // 90 degree rotate upper right corner
-        // } else if (i % 2 === 0 && j % 2 === 0) {
-        //   // 0 or 360 degree rotate upper left corner
-        //   image(tile.image, i * tile.image.width, j * tile.image.height);
-        // }
-        image(tile.image, 0, 0, tile.width/2, tile.height/2);
-        translate(tile.width * (i + 1),0);
-        scale(-1.0,1.0);
-        image(tile.image, 0, 0, tile.width/2, tile.height/2); //video on canvas, position, dimensions
-        translate(0, tile.height * (j + 1));
-        scale(1.0,-1.0);
-        image(tile.image, 0, 0, tile.width/2, tile.height/2);
-        translate(tile.width * (i + 1), 0);
-        scale(-1.0, 1.0)
-        image(tile.image, 0, 0, tile.width/2, tile.height/2);
+    for (let i = 0; i < this.height; i++) {
+      for (let j = 0; j < this.width; j++) {
+      // along each row
+        image(tile.image, 0, 0, tile.width, tile.height);
+        if (j % 2 === 0) {
+          translate(tile.width*2,0);
+          scale(-1.0, 1.0);
+        } else {
+          scale(-1.0, 1.0);
+        }
+      }
+      // descend column
+      // translate(0, tile.height)?
+      if (i % 2 === 0) {
+        translate(-(tile.width*this.width), tile.height*2);
+        scale(1.0, -1.0);
+      } else {
+        translate(-(tile.width*this.width), 0);
+        scale(1.0, -1.0);
       }
     }
-
-
   }
 }
 

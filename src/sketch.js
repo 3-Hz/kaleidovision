@@ -11,17 +11,17 @@ function preload() {
   sourceImage = sourceImage0 = loadImage("img/mandelbrot.png");
   sourceImage1 = loadImage("img/mandelbrot2.jpg");
   sourceImage2 = loadImage("img/buildingsketch.jpg");
-  //sourceImage = sourceImage0;
 }
 
 function setup() {
   resizeGrid();
   if (isMobileBrowser) {
-    createCanvas(displayWidth, displayHeight);
+    let canvas = createCanvas(displayWidth*2, displayHeight*2);
+    canvas.parent('canvasContainer');
   } else {
-    createCanvas(sourceImage.width, sourceImage.height);
+    let canvas = createCanvas(sourceImage.width, sourceImage.height);
+    canvas.parent('canvasContainer');
   }
-  //canvas.parent('canvasContainer');
 
   background(255);
   smooth();
@@ -82,11 +82,9 @@ function isMobile() {
       || navigator.userAgent.match(/iPod/i)
       || navigator.userAgent.match(/BlackBerry/i)
       || navigator.userAgent.match(/Windows Phone/i)) {
-        console.log('true');
       return true;
   } else {
-    console.log('false');
-      return false;
+    return false;
   }
 }
 

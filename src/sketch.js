@@ -4,7 +4,7 @@ var tileWidth = tileSize;
 var tileHeight = tileSize;
 var gridSize = 0;
 var backgroundOption = 0;
-//var isMobileBrowser = isMobile();
+var isMobileBrowser = isMobile();
 
 // setup
 function preload() {
@@ -70,21 +70,21 @@ function resizeGrid() {
   gridSize = (gridSize - (gridSize % 2));
 }
 
-// function isMobile() {
-//   if (navigator.userAgent.match(/Android/i)
-//       || navigator.userAgent.match(/webOS/i)
-//       || navigator.userAgent.match(/iPhone/i)
-//       || navigator.userAgent.match(/iPad/i)
-//       || navigator.userAgent.match(/iPod/i)
-//       || navigator.userAgent.match(/BlackBerry/i)
-//       || navigator.userAgent.match(/Windows Phone/i)) {
-//         console.log('true');
-//       return true;
-//   } else {
-//     console.log('false');
-//       return false;
-//   }
-// }
+function isMobile() {
+  if (navigator.userAgent.match(/Android/i)
+      || navigator.userAgent.match(/webOS/i)
+      || navigator.userAgent.match(/iPhone/i)
+      || navigator.userAgent.match(/iPad/i)
+      || navigator.userAgent.match(/iPod/i)
+      || navigator.userAgent.match(/BlackBerry/i)
+      || navigator.userAgent.match(/Windows Phone/i)) {
+        console.log('true');
+      return true;
+  } else {
+    console.log('false');
+      return false;
+  }
+}
 
 // object representation of grid
 class Grid {
@@ -122,11 +122,12 @@ class Tile {
   constructor(image, width, height) {
     this.width = width;
     this.height = height;
-    // if (isMobileBrowser) {
-    //   this.image = image.get(touches[0].x, touches[0].y, this.width, this.height);
-    // } else {
-    //   this.image = image.get(mouseX, mouseY, this.width, this.height);
-    // }
-    this.image = image.get(mouseX, mouseY, this.width, this.height);
+    if (isMobileBrowser) {
+      this.image = image.get(2000, 900, this.width, this.height);
+      //console.log(mouseX + ', ' + mouseY);
+    } else {
+      this.image = image.get(mouseX, mouseY, this.width, this.height);
+    }
+    //this.image = image.get(mouseX, mouseY, this.width, this.height);
   }
 }

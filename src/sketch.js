@@ -42,6 +42,10 @@ function keyPressed() {
   }
 }
 
+function touchStarted() {
+
+}
+
 // helper functions
 function backgroundCycler() {
   if (backgroundOption === 2) {

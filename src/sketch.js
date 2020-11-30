@@ -124,12 +124,12 @@ class Tile {
   constructor(image, width, height) {
     this.width = width;
     this.height = height;
-    // if (isMobileBrowser) {
-    //   this.image = image.get(2000, 900, this.width, this.height);
-    //   //console.log(mouseX + ', ' + mouseY);
-    // } else {
-    //   this.image = image.get(mouseX, mouseY, this.width, this.height);
-    // }
-    this.image = image.get(mouseX, mouseY, this.width, this.height);
+    if (isMobileBrowser) {
+      this.image = image.get(((mouseX/(displayWidth*2)) * sourceImage.width), ((mouseY/(displayHeight*2)) * sourceImage.height), this.width, this.height);
+      //console.log(mouseX + ', ' + mouseY);
+    } else {
+      this.image = image.get(mouseX, mouseY, this.width, this.height);
+    }
+    // this.image = image.get(mouseX, mouseY, this.width, this.height);
   }
 }

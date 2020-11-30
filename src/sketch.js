@@ -16,7 +16,11 @@ function preload() {
 
 function setup() {
   resizeGrid();
-  createCanvas(sourceImage.width, sourceImage.height);
+  if (isMobileBrowser) {
+    createCanvas(displayWidth, displayHeight);
+  } else {
+    createCanvas(sourceImage.width, sourceImage.height);
+  }
   //canvas.parent('canvasContainer');
 
   background(255);

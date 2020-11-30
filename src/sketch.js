@@ -2,6 +2,8 @@
 var tileSize = 100;
 var tileWidth = tileSize;
 var tileHeight = tileSize;
+var canvasWidth;
+var canvasHeight;
 var gridSize = 0;
 var backgroundOption = 0;
 var isMobileBrowser = isMobile();
@@ -14,14 +16,9 @@ function preload() {
 }
 
 function setup() {
-  resizeGrid();
-  if (isMobileBrowser) {
-    let canvas = createCanvas(displayWidth*2, displayHeight*2);
-    canvas.parent('canvasContainer');
-  } else {
-    let canvas = createCanvas(sourceImage.width, sourceImage.height);
-    canvas.parent('canvasContainer');
-  }
+  scaleGrid();
+  let canvas = createCanvas(canvasWidth, canvasHeight);
+  canvas.parent('canvasContainer');
 
   background(255);
   smooth();
@@ -37,7 +34,7 @@ function draw() {
 // event listeners
 function mouseClicked() {
   backgroundCycler();
-  resizeGrid();
+  scaleGrid();
 }
 
 function keyPressed() {
@@ -66,12 +63,24 @@ function backgroundCycler() {
   }
 }
 
-function resizeGrid() {
-  gridsize = 0;
-  while ((gridSize * tileWidth) < (sourceImage.width + tileWidth)) {
-    gridSize++;
+function scaleGrid() {
+  if (isMobileBrowser) {
+    gridSize = 0;
+    while ((gridSize * tileWidth) < (displayWidth * 2)) {
+      gridSize++;
+    }
+    gridSize = (gridSize - (gridSize % 2));
+    canvasWidth = tileWidth * gridSize;
+    canvasHeight = canvasWidth;
+  } else {
+    canvasWidth = sourceImage.width;
+    canvasHeight = sourceImage.height;
+    gridsize = 0;
+    while ((gridSize * tileWidth) < (canvasWidth + tileWidth)) {
+      gridSize++;
+    }
+    gridSize = (gridSize - (gridSize % 2));
   }
-  gridSize = (gridSize - (gridSize % 2));
 }
 
 function isMobile() {
@@ -125,11 +134,9 @@ class Tile {
     this.width = width;
     this.height = height;
     if (isMobileBrowser) {
-      this.image = image.get(((mouseX/(displayWidth*2)) * sourceImage.width), ((mouseY/(displayHeight*2)) * sourceImage.height), this.width, this.height);
-      //console.log(mouseX + ', ' + mouseY);
+      this.image = image.get(((mouseX/(canvasWidth)) * sourceImage.width), ((mouseY/(canvasHeight)) * sourceImage.height), this.width, this.height);
     } else {
       this.image = image.get(mouseX, mouseY, this.width, this.height);
     }
-    // this.image = image.get(mouseX, mouseY, this.width, this.height);
   }
 }
